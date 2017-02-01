@@ -39,23 +39,16 @@ class BaseGoogleAuth(object):
             pass
         user.save()
 
-        home_dir = os.path.expanduser('~')
-        credential_dir = os.path.join(home_dir, '.credentials')
-        if not os.path.exists(credential_dir):
-            os.makedirs(credential_dir)
-        credential_path = os.path.join(credential_dir,
-                                       'gmail-python-quickstart.json')
-        
-        if not os.path.exists(credential_path):      
-          f = open(credential_path, 'w+')
-          f.close
 
-        store = Storage(credential_path)
-        credentials = store.get()
-        print response
-        f = open(credential_path, 'w+')
-        f.write(str(response))
-        f.close
+        try:
+            user = Account.objects.get(email=email)
+        except Exception:
+            pass
+        try: 
+            user.access_token = response['access_token']
+        except Exception: 
+            pass
+        user.save()
 
 
         # ----End----
